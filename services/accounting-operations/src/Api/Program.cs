@@ -7,6 +7,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorization();
 
+builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureAuthentication();
 builder.Services.ConfigureSwagger();
 
