@@ -1,5 +1,4 @@
 using AccountingOperations.Api.Configuration.Options;
-using AccountingOperations.Api.Infrastructure;
 using MassTransit;
 
 namespace AccountingOperations.Api.Configuration;
@@ -15,8 +14,7 @@ public static class MessageBrokerConfigurationExtensions
             .Get<MessageBrokerOptions>()
             ?? throw new InvalidOperationException($"No \"{MessageBrokerOptions.Section}\" options provided");
 
-        services.AddSingleton(new ExchangeTopics(messageBrokerOptions));
-        services.AddSingleton<MessageExchangeBus>();
+        services.AddSingleton(messageBrokerOptions.ExchangeTopics);
 
         return services.AddMassTransit(options =>
         {
