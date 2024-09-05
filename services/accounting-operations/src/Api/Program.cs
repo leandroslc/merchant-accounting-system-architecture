@@ -10,6 +10,7 @@ builder.Services.AddAuthorization();
 builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureAuthentication();
 builder.Services.ConfigureSwagger();
+builder.Services.ConfigureMessageBrokerIntegration(builder.Configuration);
 
 var app = builder.Build();
 

@@ -1,6 +1,7 @@
 services:
 
   accounting-operations-db:
+    container_name: merchant-accounting-system-accounting-operations-db
     image: postgres:16.4-bookworm
     ports:
       - 5401:5432
@@ -9,3 +10,16 @@ services:
     environment:
       - POSTGRES_USER=ab58f518b0f8485a8934ee11289b4f31
       - POSTGRES_PASSWORD=62561b6debea489bae1802bcd0590bc0
+
+  message-broker:
+    container_name: merchant-accounting-system-message-broker
+    image: rabbitmq:3.13-management
+    ports:
+      - 54031:15672
+      - 5403:5672
+    volumes:
+      - ./configuration/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./configuration/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    environment:
+      - RABBITMQ_DEFAULT_USER=db7d825c5ba9451381c4aa5c91f7bf82
+      - RABBITMQ_DEFAULT_PASS=9219052054e74abf95b964c37361cc4c
