@@ -9,10 +9,7 @@ public static class MigrationConfigurationExtensions
         this IServiceCollection services,
         string connectionString)
     {
-        if (connectionString is null)
-        {
-            throw new ArgumentNullException(nameof(connectionString));
-        }
+        ArgumentNullException.ThrowIfNull(connectionString, nameof(connectionString));
 
         return services
             .AddFluentMigratorCore()

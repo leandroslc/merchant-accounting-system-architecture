@@ -11,6 +11,8 @@ builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureAuthentication();
 builder.Services.ConfigureSwagger();
 builder.Services.ConfigureMessageBrokerIntegration(builder.Configuration);
+builder.Services.ConfigureApplicationServices();
+builder.Services.ConfigureValidations();
 
 var app = builder.Build();
 
