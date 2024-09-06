@@ -1,6 +1,6 @@
 using FluentMigrator;
 
-namespace AccoutingOperations.Core.Migrations;
+namespace AccountingOperations.Core.Migrations;
 
 [Migration(202409050013)]
 public sealed class CreateOperationsTable : Migration

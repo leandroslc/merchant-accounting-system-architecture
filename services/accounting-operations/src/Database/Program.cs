@@ -1,4 +1,4 @@
-﻿using AccoutingOperations.Database.Commands;
+﻿using AccountingOperations.Database.Commands;
 using Spectre.Console.Cli;
 
 var app = new CommandApp();

@@ -1,7 +1,7 @@
 using AccountingOperations.Core;
 using FluentMigrator.Runner;
 
-namespace AccoutingOperations.Database.Configuration;
+namespace AccountingOperations.Api.Configuration;
 
 public static class MigrationConfigurationExtensions
 {

@@ -1,13 +1,13 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using AccountingOperations.Api.Configuration;
-using AccountingOperations.Api.Infrastructure;
+using AccountingOperations.Core.Infrastructure.Data;
 using AccoutingOperations.Database.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace AccoutingOperations.Database.Commands;
+namespace AccountingOperations.Database.Commands;
 
 [Description("Runs migrations")]
 internal sealed class MigrationCommand : Command<MigrationCommand.Settings>
