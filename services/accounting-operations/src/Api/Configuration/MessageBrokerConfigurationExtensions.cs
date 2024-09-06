@@ -1,4 +1,5 @@
 using AccountingOperations.Api.Configuration.Options;
+using AccountingOperations.Core.Infrastructure.Broker;
 using MassTransit;
 
 namespace AccountingOperations.Api.Configuration;
@@ -15,8 +16,9 @@ public static class MessageBrokerConfigurationExtensions
             ?? throw new InvalidOperationException($"No \"{MessageBrokerOptions.Section}\" options provided");
 
         services.AddSingleton(messageBrokerOptions.ExchangeTopics);
+        services.AddSingleton<MessageExchangeBus>();
 
-        return services.AddMassTransit(options =>
+        services.AddMassTransit(options =>
         {
             options.UsingRabbitMq((context, factory) =>
             {
@@ -28,5 +30,7 @@ public static class MessageBrokerConfigurationExtensions
                 factory.ConfigureEndpoints(context);
             });
         });
+
+        return services;
     }
 }

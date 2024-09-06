@@ -1,6 +1,6 @@
 namespace AccountingOperations.Core.Infrastructure.Broker;
 
-public sealed class ExchangeTopics
+public sealed class MessageExchangeTopics
 {
-    public required string OperationDone { get; init; }
+    public required string OperationRegistered { get; init; }
 }

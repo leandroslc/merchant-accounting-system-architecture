@@ -34,7 +34,7 @@
   ],
   "queues": [
     {
-      "name": "subscription-merchant-accounting-system-operation-done",
+      "name": "subscription-merchant-accounting-system-operation-registered",
       "vhost": "/",
       "durable": true,
       "auto_delete": false,
@@ -43,7 +43,7 @@
   ],
   "exchanges": [
     {
-      "name": "topic-merchant-accounting-system-operation-done",
+      "name": "topic-merchant-accounting-system-operation-registered",
       "vhost": "/",
       "type": "fanout",
       "durable": true,
@@ -54,9 +54,9 @@
   ],
   "bindings": [
     {
-      "source": "topic-merchant-accounting-system-operation-done",
+      "source": "topic-merchant-accounting-system-operation-registered",
       "vhost": "/",
-      "destination": "subscription-merchant-accounting-system-operation-done",
+      "destination": "subscription-merchant-accounting-system-operation-registered",
       "destination_type": "queue",
       "routing_key": "",
       "arguments": {}

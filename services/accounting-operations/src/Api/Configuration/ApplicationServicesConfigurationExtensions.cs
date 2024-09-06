@@ -1,3 +1,5 @@
+using AccountingOperations.Core;
+
 namespace AccountingOperations.Api.Configuration;
 
 public static class ApplicationServicesConfigurationExtensions
@@ -8,7 +10,7 @@ public static class ApplicationServicesConfigurationExtensions
         services.AddMediatR(options =>
         {
             options.RegisterServicesFromAssembly(
-                typeof(ApplicationServicesConfigurationExtensions).Assembly);
+                typeof(Entrypoint).Assembly);
         });
 
         return services;

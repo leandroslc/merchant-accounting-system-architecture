@@ -1,4 +1,4 @@
-using AccountingOperations.Api.Infrastructure;
+using AccountingOperations.Core.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountingOperations.Api.Configuration;

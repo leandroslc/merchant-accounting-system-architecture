@@ -1,4 +1,4 @@
-using AccountingOperations.Api.Infrastructure;
+using AccountingOperations.Core.Infrastructure.Broker;
 
 namespace AccountingOperations.Api.Configuration.Options;
 
@@ -14,5 +14,5 @@ public sealed class MessageBrokerOptions
 
     public required string OperationDoneTopic { get; init; }
 
-    public required ExchangeTopics ExchangeTopics { get; init; }
+    public required MessageExchangeTopics ExchangeTopics { get; init; }
 }

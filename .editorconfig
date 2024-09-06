@@ -10,3 +10,6 @@ trim_trailing_whitespace = true
 
 [*.cs]
 indent_size = 4
+
+# CA1725: Parameter names should match base declaration
+dotnet_diagnostic.CA1725.severity = none

@@ -1,7 +1,24 @@
-@Api_HostAddress = http://localhost:5041
+@host = http://localhost:5041
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.mvdjdBZKOtWyQl54xAd8C9kY0RUyq-z26qNTjFR1DKA
 
-GET {{Api_HostAddress}}/v1/operations/
-Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.mvdjdBZKOtWyQl54xAd8C9kY0RUyq-z26qNTjFR1DKA
+### Register debit
 
-###
+POST {{host}}/v1/operations/debit
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "registrationDate": "2024-09-05T13:47:23.000Z",
+  "value": "100.99"
+}
+
+### Register credit
+
+POST {{host}}/v1/operations/credit
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "registrationDate": "2024-09-05T13:47:24.000Z",
+  "value": "99.99"
+}
