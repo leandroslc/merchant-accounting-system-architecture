@@ -1,4 +1,4 @@
-namespace AccountingOperations.Api.Infrastructure;
+namespace AccountingOperations.Core.Infrastructure.Broker;
 
 public sealed class ExchangeTopics
 {

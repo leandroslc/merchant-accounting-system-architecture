@@ -1,5 +1,5 @@
+using AccountingOperations.Core;
 using FluentMigrator.Runner;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace AccoutingOperations.Database.Configuration;
 
@@ -16,6 +16,6 @@ public static class MigrationConfigurationExtensions
             .ConfigureRunner(runner => runner
                 .AddPostgres()
                 .WithGlobalConnectionString(connectionString)
-                .ScanIn(typeof(MigrationConfigurationExtensions).Assembly));
+                .ScanIn(typeof(Entrypoint).Assembly));
     }
 }

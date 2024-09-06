@@ -1,6 +1,7 @@
 using FluentMigrator.Runner;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace AccountingOperations.Api.Infrastructure;
+namespace AccountingOperations.Core.Infrastructure.Data;
 
 public sealed class MigrationsRunner
 {

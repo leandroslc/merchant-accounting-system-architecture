@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountingOperations.Api.Infrastructure;
+namespace AccountingOperations.Core.Infrastructure.Data;
 
 public sealed class OperationsDbContext : DbContext
 {
@@ -9,8 +9,8 @@ public sealed class OperationsDbContext : DbContext
     {
     }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        builder.ApplyConfigurationsFromAssembly(typeof(OperationsDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OperationsDbContext).Assembly);
     }
 }
