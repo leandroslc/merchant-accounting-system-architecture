@@ -3,7 +3,7 @@ using AccountingOperations.Core.Infrastructure.Data;
 
 namespace AccountingOperations.Core.Infrastructure.Repositories;
 
-public sealed class AccountingOperationRepository
+public sealed class AccountingOperationRepository : IAccountingOperationRepository
 {
     private readonly OperationsDbContext context;
 

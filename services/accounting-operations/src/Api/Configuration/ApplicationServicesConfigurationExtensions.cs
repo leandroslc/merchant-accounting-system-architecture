@@ -14,7 +14,7 @@ public static class ApplicationServicesConfigurationExtensions
                 typeof(Entrypoint).Assembly);
         });
 
-        services.AddScoped<AccountingOperationRepository>();
+        services.AddScoped<IAccountingOperationRepository, AccountingOperationRepository>();
 
         return services;
     }

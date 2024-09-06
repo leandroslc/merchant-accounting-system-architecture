@@ -13,7 +13,7 @@ public static class MessageBrokerConfigurationExtensions
         var messageBrokerOptions = GetOptions(configuration);
 
         services.AddSingleton(messageBrokerOptions.ExchangeTopics);
-        services.AddSingleton<MessageExchangeBus>();
+        services.AddSingleton<IMessageExchangeBus, MessageExchangeBus>();
 
         services.AddMassTransitTestHarness(options =>
             options.ConfigureMassTransit(messageBrokerOptions));

@@ -2,7 +2,7 @@ using MassTransit;
 
 namespace AccountingOperations.Core.Infrastructure.Broker;
 
-public sealed class MessageExchangeBus
+public sealed class MessageExchangeBus : IMessageExchangeBus
 {
     private readonly IBus bus;
 

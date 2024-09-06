@@ -10,7 +10,7 @@ using MassTransit.Internals;
 using MassTransit.Testing;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountingOperations.IntegrationTests;
+namespace AccountingOperations.IntegrationTests.Tests;
 
 [Collection(Collections.Api)]
 public class OperationsTests

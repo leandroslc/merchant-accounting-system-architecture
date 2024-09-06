@@ -8,13 +8,13 @@ namespace AccountingOperations.Core.Commands.OperationRegistration;
 public sealed class RegisterOperationCommandHandler
     : IRequestHandler<RegisterOperationCommand>
 {
-    private readonly AccountingOperationRepository accountingOperationRepository;
-    private readonly MessageExchangeBus messageExchangeBus;
+    private readonly IAccountingOperationRepository accountingOperationRepository;
+    private readonly IMessageExchangeBus messageExchangeBus;
     private readonly MessageExchangeTopics messageExchangeTopics;
 
     public RegisterOperationCommandHandler(
-        AccountingOperationRepository accountingOperationRepository,
-        MessageExchangeBus messageExchangeBus,
+        IAccountingOperationRepository accountingOperationRepository,
+        IMessageExchangeBus messageExchangeBus,
         MessageExchangeTopics messageExchangeTopics)
     {
         this.accountingOperationRepository = accountingOperationRepository;
