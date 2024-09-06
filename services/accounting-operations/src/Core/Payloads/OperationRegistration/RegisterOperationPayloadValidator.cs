@@ -9,6 +9,8 @@ public sealed class RegisterOperationPayloadValidator
     {
         RuleFor(p => p.RegistrationDate)
             .NotEmpty()
+            .Must(date => date.Kind == DateTimeKind.Utc)
+                .WithMessage("'{PropertyName}' must be an UTC date.")
             .WithName("registrationDate");
 
         RuleFor(p => p.Value)
