@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace AccountingOperations.Database.Commands;
+namespace AccountingOperations.Cli.Commands;
 
 [Description("Runs migrations")]
 internal sealed class MigrationCommand : Command<MigrationCommand.Settings>
