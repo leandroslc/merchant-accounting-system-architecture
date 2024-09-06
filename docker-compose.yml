@@ -6,7 +6,7 @@ services:
     ports:
       - 5401:5432
     volumes:
-      - ./.data:/var/lib/postgresql/data
+      - ./.data/accounting-operations:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=ab58f518b0f8485a8934ee11289b4f31
       - POSTGRES_PASSWORD=62561b6debea489bae1802bcd0590bc0

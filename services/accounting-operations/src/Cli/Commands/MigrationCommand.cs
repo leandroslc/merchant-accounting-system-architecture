@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using AccountingOperations.Api.Configuration;
 using AccountingOperations.Core.Infrastructure.Data;
-using AccoutingOperations.Database.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 using Spectre.Console.Cli;
