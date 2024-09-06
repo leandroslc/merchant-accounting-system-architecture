@@ -1,4 +1,5 @@
 using AccountingOperations.Core;
+using AccountingOperations.Core.Infrastructure.Repositories;
 
 namespace AccountingOperations.Api.Configuration;
 
@@ -12,6 +13,8 @@ public static class ApplicationServicesConfigurationExtensions
             options.RegisterServicesFromAssembly(
                 typeof(Entrypoint).Assembly);
         });
+
+        services.AddScoped<AccountingOperationRepository>();
 
         return services;
     }
