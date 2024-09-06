@@ -10,10 +10,7 @@ public static class MessageBrokerConfigurationExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var messageBrokerOptions = configuration
-            .GetRequiredSection(MessageBrokerOptions.Section)
-            .Get<MessageBrokerOptions>()
-            ?? throw new InvalidOperationException($"No \"{MessageBrokerOptions.Section}\" options provided");
+        var messageBrokerOptions = GetOptions(configuration);
 
         services.AddSingleton(messageBrokerOptions.ExchangeTopics);
         services.AddSingleton<MessageExchangeBus>();
@@ -32,5 +29,45 @@ public static class MessageBrokerConfigurationExtensions
         });
 
         return services;
+    }
+
+    public static void ConfigureMassTransit(
+        this IBusRegistrationConfigurator options,
+        IConfiguration configuration)
+    {
+        var messageBrokerOptions = GetOptions(configuration);
+
+        options.UsingRabbitMq((context, factory) =>
+        {
+            factory.Host(messageBrokerOptions.Host, host =>
+            {
+                host.Username(messageBrokerOptions.Username);
+                host.Password(messageBrokerOptions.Password);
+            });
+            factory.ConfigureEndpoints(context);
+        });
+    }
+
+    private static MessageBrokerOptions GetOptions(IConfiguration configuration)
+    {
+        return configuration
+            .GetRequiredSection(MessageBrokerOptions.Section)
+            .Get<MessageBrokerOptions>()
+            ?? throw new InvalidOperationException($"No \"{MessageBrokerOptions.Section}\" options provided");
+    }
+
+    private static void ConfigureMassTransit(
+        this IBusRegistrationConfigurator options,
+        MessageBrokerOptions messageBrokerOptions)
+    {
+        options.UsingRabbitMq((context, factory) =>
+        {
+            factory.Host(messageBrokerOptions.Host, host =>
+            {
+                host.Username(messageBrokerOptions.Username);
+                host.Password(messageBrokerOptions.Password);
+            });
+            factory.ConfigureEndpoints(context);
+        });
     }
 }

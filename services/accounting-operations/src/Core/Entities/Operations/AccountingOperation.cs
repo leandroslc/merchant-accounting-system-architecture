@@ -9,7 +9,7 @@ public sealed class AccountingOperation
         AccountingOperationType type)
     {
         MerchantId = merchantId;
-        RegistrationDate = registrationDate;
+        RegistrationDate = GetUTCDate(registrationDate);
         Value = value;
         Type = type;
     }
@@ -21,4 +21,11 @@ public sealed class AccountingOperation
     public decimal Value { get; }
 
     public AccountingOperationType Type { get; }
+
+    private static DateTime GetUTCDate(DateTime dateTime)
+    {
+        return dateTime.Kind == DateTimeKind.Utc
+            ? dateTime
+            : DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+    }
 }
