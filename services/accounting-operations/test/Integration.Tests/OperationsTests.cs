@@ -15,7 +15,9 @@ namespace AccountingOperations.IntegrationTests;
 [Collection(Collections.Api)]
 public class OperationsTests
 {
-    private const string TestToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.mvdjdBZKOtWyQl54xAd8C9kY0RUyq-z26qNTjFR1DKA";
+    private const string TestToken
+        = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.mvdjdBZKOtWyQl54xAd8C9kY0RUyq-z26qNTjFR1DKA";
+
     private readonly HttpClient client;
     private readonly DbContext dbContext;
     private readonly ITestHarness messageExchangeTestHarness;
@@ -71,7 +73,7 @@ public class OperationsTests
     public async Task Given_ValidData_Should_StoreOperation(
         string uri, AccountingOperationType expectedType)
     {
-        var currentDate = DateTime.Now;
+        var currentDate = DateTime.Now.AsUtc();
 
         var data = new
         {
@@ -82,19 +84,22 @@ public class OperationsTests
         // Act
         await messageExchangeTestHarness.Start();
 
-        await PostAsync(uri, data, TestToken);
+        var response = await PostAsync(uri, data, TestToken);
 
         // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
         var expected = new
         {
             MerchantId = "1234567890",
-            RegistrationDate = currentDate.AsUtc(),
+            RegistrationDate = currentDate,
             Type = expectedType,
             Value = 20.90,
         };
 
-        var savedOperation = await dbContext.Set<AccountingOperation>().FirstOrDefaultAsync(a =>
-            a.MerchantId == expected.MerchantId && a.RegistrationDate == expected.RegistrationDate);
+        var savedOperation = await dbContext
+            .Set<AccountingOperation>()
+            .FindAsync(expected.MerchantId, expected.RegistrationDate);
 
         savedOperation
             .Should()
@@ -105,10 +110,11 @@ public class OperationsTests
 
     [Theory]
     [InlineData("v1/operations/debit", AccountingOperationType.Debit)]
+    [InlineData("v1/operations/credit", AccountingOperationType.Credit)]
     public async Task Given_ValidData_Should_SendOperationRegisteredMessage(
         string uri, AccountingOperationType expectedType)
     {
-        var currentDate = DateTime.Now;
+        var currentDate = DateTime.Now.AsUtc();
 
         var data = new
         {
@@ -119,20 +125,23 @@ public class OperationsTests
         // Act
         await messageExchangeTestHarness.Start();
 
-        await PostAsync(uri, data, TestToken);
+        var response = await PostAsync(uri, data, TestToken);
 
         // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
         var expected = new
         {
             MerchantId = "1234567890",
-            RegistrationDate = currentDate.AsUtc(),
+            RegistrationDate = currentDate,
             Type = expectedType,
             Value = 20.90,
         };
 
-        var sentMessage = await messageExchangeTestHarness.Sent
+        var sentMessage = (await messageExchangeTestHarness.Sent
             .SelectAsync<OperationRegistered>()
-            .FirstOrDefault();
+            .ToListAsync())
+            .Last();
 
         sentMessage.MessageObject
             .Should()

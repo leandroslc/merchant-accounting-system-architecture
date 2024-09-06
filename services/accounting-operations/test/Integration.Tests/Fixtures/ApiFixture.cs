@@ -1,6 +1,5 @@
 using AccountingOperations.Api.Configuration;
 using AccountingOperations.Core.Infrastructure.Data;
-using MassTransit;
 using MassTransit.Testing;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -16,7 +15,7 @@ public class ApiFixture : IDisposable, IAsyncLifetime
             .WithWebHostBuilder(builder => builder
                 .UseEnvironment("Test")
                 .ConfigureServices((context, services) => services
-                    .AddMassTransitTestHarness(options => options.ConfigureMassTransit(context.Configuration))
+                    .ConfigureMessageBrokerTestsIntegration(context.Configuration)
                     .ConfigureMigrations(context.Configuration))
             );
 
