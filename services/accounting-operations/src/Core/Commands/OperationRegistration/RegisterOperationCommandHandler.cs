@@ -10,16 +10,13 @@ public sealed class RegisterOperationCommandHandler
 {
     private readonly IAccountingOperationRepository accountingOperationRepository;
     private readonly IMessageExchangeBus messageExchangeBus;
-    private readonly MessageExchangeTopics messageExchangeTopics;
 
     public RegisterOperationCommandHandler(
         IAccountingOperationRepository accountingOperationRepository,
-        IMessageExchangeBus messageExchangeBus,
-        MessageExchangeTopics messageExchangeTopics)
+        IMessageExchangeBus messageExchangeBus)
     {
         this.accountingOperationRepository = accountingOperationRepository;
         this.messageExchangeBus = messageExchangeBus;
-        this.messageExchangeTopics = messageExchangeTopics;
     }
 
     public async Task Handle(
@@ -32,8 +29,6 @@ public sealed class RegisterOperationCommandHandler
 
         var operationRegistered = new OperationRegistered(operation);
 
-        await messageExchangeBus.Send(
-            operationRegistered,
-            messageExchangeTopics.OperationRegistered);
+        await messageExchangeBus.Send(operationRegistered);
     }
 }

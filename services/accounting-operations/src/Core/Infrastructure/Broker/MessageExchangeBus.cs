@@ -4,17 +4,15 @@ namespace AccountingOperations.Core.Infrastructure.Broker;
 
 public sealed class MessageExchangeBus : IMessageExchangeBus
 {
-    private readonly IBus bus;
+    private readonly IPublishEndpoint publisher;
 
-    public MessageExchangeBus(IBus bus)
+    public MessageExchangeBus(IPublishEndpoint publisher)
     {
-        this.bus = bus;
+        this.publisher = publisher;
     }
 
-    public async Task Send<TMessage>(TMessage message, string topic)
+    public async Task Send<TMessage>(TMessage message)
     {
-        var endpoint = await bus.GetSendEndpoint(new Uri(topic));
-
-        await endpoint.Send(message ?? throw new ArgumentNullException(nameof(message)));
+        await publisher.Publish(message ?? throw new ArgumentNullException(nameof(message)));
     }
 }

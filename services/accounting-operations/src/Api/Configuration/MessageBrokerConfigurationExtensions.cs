@@ -12,10 +12,9 @@ public static class MessageBrokerConfigurationExtensions
     {
         var messageBrokerOptions = GetOptions(configuration);
 
-        services.AddSingleton(messageBrokerOptions.ExchangeTopics);
-        services.AddSingleton<IMessageExchangeBus, MessageExchangeBus>();
+        services.AddScoped<IMessageExchangeBus, MessageExchangeBus>();
 
-        services.AddMassTransitTestHarness(options =>
+        services.AddMassTransit(options =>
             options.ConfigureMassTransit(messageBrokerOptions));
 
         return services;
@@ -43,6 +42,8 @@ public static class MessageBrokerConfigurationExtensions
         this IBusRegistrationConfigurator options,
         MessageBrokerOptions messageBrokerOptions)
     {
+        options.SetKebabCaseEndpointNameFormatter();
+
         options.UsingRabbitMq((context, factory) =>
         {
             factory.Host(messageBrokerOptions.Host, host =>
@@ -50,6 +51,7 @@ public static class MessageBrokerConfigurationExtensions
                 host.Username(messageBrokerOptions.Username);
                 host.Password(messageBrokerOptions.Password);
             });
+
             factory.ConfigureEndpoints(context);
         });
     }

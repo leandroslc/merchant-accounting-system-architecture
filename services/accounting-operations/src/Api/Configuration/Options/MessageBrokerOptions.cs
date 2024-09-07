@@ -1,5 +1,3 @@
-using AccountingOperations.Core.Infrastructure.Broker;
-
 namespace AccountingOperations.Api.Configuration.Options;
 
 public sealed class MessageBrokerOptions
@@ -11,8 +9,4 @@ public sealed class MessageBrokerOptions
     public required string Username { get; init; }
 
     public required string Password { get; init; }
-
-    public required string OperationDoneTopic { get; init; }
-
-    public required MessageExchangeTopics ExchangeTopics { get; init; }
 }
