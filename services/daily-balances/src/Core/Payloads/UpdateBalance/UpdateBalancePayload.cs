@@ -6,23 +6,23 @@ namespace DailyBalances.Core.Payloads.UpdateBalance;
 
 public sealed class UpdateBalancePayload
 {
-    public required string MerchantId { get; init; }
+    public string? MerchantId { get; init; }
 
-    public required DateTime RegistrationDate { get; init; }
+    public DateTime? RegistrationDate { get; init; }
 
-    public required decimal Value { get; init; }
+    public decimal? Value { get; init; }
 
-    public required AccountingOperationType Type { get; init; }
+    public AccountingOperationType? Type { get; init; }
 
     public UpdateBalanceCommand AsUpdateBalanceCommand()
     {
-        var operationValueService = OperationValueServiceFactory.GetByType(Type);
+        var operationValueService = OperationValueServiceFactory.GetByType(Type!.Value);
 
         return new UpdateBalanceCommand
         {
-            MerchantId = MerchantId,
-            Day = DateTime.SpecifyKind(RegistrationDate, DateTimeKind.Utc),
-            OperationValue = operationValueService.GetValue(Value),
+            MerchantId = MerchantId!,
+            Day = DateTime.SpecifyKind(RegistrationDate!.Value, DateTimeKind.Utc),
+            OperationValue = operationValueService.GetValue(Value!.Value),
         };
     }
 }

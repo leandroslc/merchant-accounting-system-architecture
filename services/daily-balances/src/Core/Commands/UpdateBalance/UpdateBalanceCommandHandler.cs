@@ -20,12 +20,14 @@ public sealed class UpdateBalanceCommandHandler
     {
         var balance = await balanceRepository.FindAsync(command.MerchantId, command.Day);
 
-        if (balance is not null)
+        if (balance is null)
         {
             await balanceRepository.CreateOrUpdateAsync(
                 command.MerchantId,
                 command.Day,
                 command.OperationValue);
+
+            return;
         }
 
         await balanceRepository.UpdateAsync(
