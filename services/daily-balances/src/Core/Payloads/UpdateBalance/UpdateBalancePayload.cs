@@ -4,7 +4,7 @@ using DailyBalances.Core.Services.OperationValue;
 
 namespace DailyBalances.Core.Payloads.UpdateBalance;
 
-public sealed class UpdateBalancePayload
+public class UpdateBalancePayload
 {
     public string? MerchantId { get; init; }
 
@@ -21,7 +21,7 @@ public sealed class UpdateBalancePayload
         return new UpdateBalanceCommand
         {
             MerchantId = MerchantId!,
-            Day = DateTime.SpecifyKind(RegistrationDate!.Value, DateTimeKind.Utc),
+            Day = DateTime.SpecifyKind(RegistrationDate!.Value.Date, DateTimeKind.Utc),
             OperationValue = operationValueService.GetValue(Value!.Value),
         };
     }

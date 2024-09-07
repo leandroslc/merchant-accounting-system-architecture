@@ -28,9 +28,6 @@ services:
     ports:
       - 54031:15672
       - 5403:5672
-    volumes:
-      - ./configuration/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
-      - ./configuration/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
     environment:
       - RABBITMQ_DEFAULT_USER=db7d825c5ba9451381c4aa5c91f7bf82
       - RABBITMQ_DEFAULT_PASS=9219052054e74abf95b964c37361cc4c
