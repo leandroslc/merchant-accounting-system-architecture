@@ -15,17 +15,16 @@ public sealed class GetDailyBalancesQueryHandler
     }
 
     public async Task<GetDailyBalancesQueryOutput> Handle(
-        GetDailyBalancesQuery request,
+        GetDailyBalancesQuery query,
         CancellationToken cancellationToken)
     {
         var balance = await balanceRepository.Find(
-            request.MerchantId, request.Day);
+            query.MerchantId, query.Day);
 
-        if (balance is null)
-        {
-            return new GetDailyBalancesQueryOutput(decimal.Zero);
-        }
+        var total = balance is not null
+            ? balance.Total
+            : decimal.Zero;
 
-        return new GetDailyBalancesQueryOutput(balance.Total);
+        return new GetDailyBalancesQueryOutput(total);
     }
 }
