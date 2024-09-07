@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace DailyBalances.Core.Queries.GetDailyBalancesQuery;
+namespace DailyBalances.Core.Queries.GetDailyBalances;
 
 public sealed class GetDailyBalancesQuery : IRequest<GetDailyBalancesQueryOutput>
 {

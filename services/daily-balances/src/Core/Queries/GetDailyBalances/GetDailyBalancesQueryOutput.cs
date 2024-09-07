@@ -1,6 +1,6 @@
 using DailyBalances.Core.Entities.Balances;
 
-namespace DailyBalances.Core.Queries.GetDailyBalancesQuery;
+namespace DailyBalances.Core.Queries.GetDailyBalances;
 
 public sealed class GetDailyBalancesQueryOutput
 {

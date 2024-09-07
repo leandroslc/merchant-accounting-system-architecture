@@ -1,7 +1,7 @@
 using DailyBalances.Core.Infrastructure.Repositories;
 using MediatR;
 
-namespace DailyBalances.Core.Queries.GetDailyBalancesQuery;
+namespace DailyBalances.Core.Queries.GetDailyBalances;
 
 public sealed class GetDailyBalancesQueryHandler
     : IRequestHandler<GetDailyBalancesQuery, GetDailyBalancesQueryOutput>
