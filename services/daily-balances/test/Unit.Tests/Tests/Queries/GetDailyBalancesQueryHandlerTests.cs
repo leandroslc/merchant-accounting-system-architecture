@@ -32,7 +32,7 @@ public class GetDailyBalancesQueryHandlerTests
         // Assert
         await balanceRepository
             .Received()
-            .Find(
+            .FindAsync(
                 Arg.Is<string>(p => p == "8a61cbd3-d8b1-4ca7-b9a7-acb46b478617"),
                 Arg.Is<DateTime>(p => p == new DateTime(2024, 05, 10)));
     }
@@ -41,7 +41,7 @@ public class GetDailyBalancesQueryHandlerTests
     public async Task Given_HasBalanceStored_Should_ReturnCurrentBalance()
     {
         balanceRepository
-            .Find(Arg.Any<string>(), Arg.Any<DateTime>())
+            .FindAsync(Arg.Any<string>(), Arg.Any<DateTime>())
             .Returns(new Balance(validQuery.MerchantId, validQuery.Day, 300.00M));
 
         // Act
@@ -58,7 +58,7 @@ public class GetDailyBalancesQueryHandlerTests
     public async Task Given_NoBalanceIsFound_Should_ReturnZeroBalance()
     {
         balanceRepository
-            .Find(Arg.Any<string>(), Arg.Any<DateTime>())
+            .FindAsync(Arg.Any<string>(), Arg.Any<DateTime>())
             .ReturnsNull();
 
         // Act

@@ -18,7 +18,7 @@ public sealed class GetDailyBalancesQueryHandler
         GetDailyBalancesQuery query,
         CancellationToken cancellationToken)
     {
-        var balance = await balanceRepository.Find(
+        var balance = await balanceRepository.FindAsync(
             query.MerchantId, query.Day);
 
         var total = balance is not null
