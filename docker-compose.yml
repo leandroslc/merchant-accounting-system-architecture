@@ -11,6 +11,17 @@ services:
       - POSTGRES_USER=ab58f518b0f8485a8934ee11289b4f31
       - POSTGRES_PASSWORD=62561b6debea489bae1802bcd0590bc0
 
+  daily-balances-db:
+    container_name: merchant-accounting-system-daily-balance-db
+    image: postgres:16.4-bookworm
+    ports:
+      - 5402:5432
+    volumes:
+      - ./.data/daily-balance:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=e5f413a7aa384eb0b67bd73afa32464f
+      - POSTGRES_PASSWORD=45d9bef04dcf4b60b719fbd2a3c129c7
+
   message-broker:
     container_name: merchant-accounting-system-message-broker
     image: rabbitmq:3.13-management
