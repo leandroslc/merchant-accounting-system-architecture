@@ -19,7 +19,8 @@ public sealed class AccountingOperationEntityConfiguration
 
         builder
             .Property(p => p.RegistrationDate)
-            .HasColumnName("registered_at");
+            .HasColumnName("registered_at")
+            .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
 
         builder
             .Property(p => p.Value)

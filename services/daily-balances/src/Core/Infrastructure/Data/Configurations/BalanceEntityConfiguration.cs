@@ -19,7 +19,8 @@ public sealed class BalanceEntityConfiguration
 
         builder
             .Property(p => p.Day)
-            .HasColumnName("day");
+            .HasColumnName("day")
+            .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
 
         builder
             .Property(p => p.Total)

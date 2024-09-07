@@ -21,7 +21,7 @@ public sealed class BalancesController : CustomControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(GetDailyBalancesQueryOutput), 200)]
     [ProducesResponseType(typeof(ProblemDetails), 400)]
-    public async Task<IActionResult> RegisterDebit([FromQuery] GetDailyBalancesPayload payload)
+    public async Task<IActionResult> GetBalance([FromQuery] GetDailyBalancesPayload payload)
     {
         var query = payload.AsGetDailyBalancesQuery(UserId);
 

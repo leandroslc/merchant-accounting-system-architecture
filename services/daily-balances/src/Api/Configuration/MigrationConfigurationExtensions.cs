@@ -9,7 +9,7 @@ public static class MigrationConfigurationExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        const string connectionKey = "Operations";
+        const string connectionKey = "Balances";
 
         var connectionString = configuration.GetConnectionString(connectionKey)
             ?? throw new InvalidOperationException($"Missing {connectionKey} connection string");
