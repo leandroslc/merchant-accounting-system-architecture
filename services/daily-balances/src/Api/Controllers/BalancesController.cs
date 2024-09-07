@@ -1,4 +1,5 @@
-using DailyBalances.Core.Queries.GetDailyBalancesQuery;
+using DailyBalances.Core.Payloads.GetDailyBalances;
+using DailyBalances.Core.Queries.GetDailyBalances;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,14 +21,9 @@ public sealed class BalancesController : CustomControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(GetDailyBalancesQueryOutput), 200)]
     [ProducesResponseType(typeof(ProblemDetails), 400)]
-    public async Task<IActionResult> RegisterDebit(DateTime day)
+    public async Task<IActionResult> RegisterDebit([FromQuery] GetDailyBalancesPayload payload)
     {
-        var d = day.Date;
-        var query = new GetDailyBalancesQuery
-        {
-            MerchantId = UserId,
-            Day = d.Kind == DateTimeKind.Utc ? d : DateTime.SpecifyKind(d, DateTimeKind.Utc),
-        };
+        var query = payload.AsGetDailyBalancesQuery(UserId);
 
         var output = await sender.Send(query);
 

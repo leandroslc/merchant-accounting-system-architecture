@@ -23,9 +23,9 @@ public sealed class GetDailyBalancesQueryHandler
 
         if (balance is null)
         {
-            return new GetDailyBalancesQueryOutput(request.Day);
+            return new GetDailyBalancesQueryOutput(decimal.Zero);
         }
 
-        return new GetDailyBalancesQueryOutput(balance);
+        return new GetDailyBalancesQueryOutput(balance.Total);
     }
 }
