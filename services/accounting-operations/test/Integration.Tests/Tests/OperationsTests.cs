@@ -138,7 +138,7 @@ public class OperationsTests
             Value = 20.90,
         };
 
-        var sentMessage = (await messageExchangeTestHarness.Sent
+        var sentMessage = (await messageExchangeTestHarness.Published
             .SelectAsync<OperationRegistered>()
             .ToListAsync())
             .Last();

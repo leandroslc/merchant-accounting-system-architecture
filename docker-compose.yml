@@ -75,9 +75,7 @@ services:
     ports:
       - 5404:8080
     depends_on:
-      accounting-operations-db:
-        condition: service_healthy
-      message-broker:
+      daily-balances-api:
         condition: service_healthy
     environment:
       - ConnectionStrings__Operations=Server=accounting-operations-db;Port=5432;Database=accounting-operations;User Id=ab58f518b0f8485a8934ee11289b4f31;Password=62561b6debea489bae1802bcd0590bc0;
