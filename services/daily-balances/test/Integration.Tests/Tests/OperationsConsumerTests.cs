@@ -38,7 +38,7 @@ public class OperationsConsumerTests
         await AddBalance(merchantId, currentDate, 120);
 
         // Act
-        await PublishMessageAndAssertConsumed(message);
+        await PublishMessageAndConsume(message);
 
         // Assert
         var addedBalance = await dbContext.Set<Balance>()
@@ -69,7 +69,7 @@ public class OperationsConsumerTests
         await RemoveBalanceIfExists(merchantId, currentDate);
 
         // Act
-        await PublishMessageAndAssertConsumed(message);
+        await PublishMessageAndConsume(message);
 
         // Assert
         var addedBalance = await dbContext.Set<Balance>()
@@ -83,7 +83,7 @@ public class OperationsConsumerTests
         });
     }
 
-    private async Task PublishMessageAndAssertConsumed(OperationRegistered message)
+    private async Task PublishMessageAndConsume(OperationRegistered message)
     {
         await messageExchangeTestHarness.Start();
 
@@ -92,7 +92,7 @@ public class OperationsConsumerTests
         await messageExchangeTestHarness.Consumed.Any<OperationRegistered>();
 
         // TODO: Find a better way to wait for consumer completion
-        await Task.Delay(500);
+        await Task.Delay(1000);
 
         await messageExchangeTestHarness.Stop();
     }

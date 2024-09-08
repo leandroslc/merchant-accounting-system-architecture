@@ -21,14 +21,15 @@ public sealed class OperationRegisteredConsumer : IConsumer<OperationRegistered>
 
     public async Task Consume(ConsumeContext<OperationRegistered> context)
     {
-        var validationResult = validator.Validate(context.Message);
+        var payload = context.Message.ToUpdateBalancePayload();
+        var validationResult = validator.Validate(payload);
 
         if (!validationResult.IsValid)
         {
             return;
         }
 
-        var command = context.Message.AsUpdateBalanceCommand();
+        var command = payload.AsUpdateBalanceCommand();
 
         await sender.Send(command);
     }

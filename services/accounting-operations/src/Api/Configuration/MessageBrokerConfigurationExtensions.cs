@@ -42,8 +42,6 @@ public static class MessageBrokerConfigurationExtensions
         this IBusRegistrationConfigurator options,
         MessageBrokerOptions messageBrokerOptions)
     {
-        options.SetKebabCaseEndpointNameFormatter();
-
         options.UsingRabbitMq((context, factory) =>
         {
             factory.Host(messageBrokerOptions.Host, host =>
