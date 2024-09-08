@@ -1,5 +1,5 @@
 using DailyBalances.Api.Configuration;
-using DailyBalances.Worker.Configuration;
+using DailyBalances.OperationsConsumer.Configuration;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -11,3 +11,5 @@ builder.Services.ConfigureDbContext(builder.Configuration);
 var host = builder.Build();
 
 host.Run();
+
+public partial class Program {}

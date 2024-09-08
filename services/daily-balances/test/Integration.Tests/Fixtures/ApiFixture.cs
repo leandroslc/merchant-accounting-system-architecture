@@ -1,45 +1,35 @@
+extern alias Api;
+
 using DailyBalances.Api.Configuration;
-using DailyBalances.Core.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
+using ApiProgram = Api::Program;
 
 namespace DailyBalances.IntegrationTests.Fixtures;
 
-public class ApiFixture : IDisposable, IAsyncLifetime
+public class ApiFixture : BaseFixture<ApiProgram>
 {
-    public ApiFixture()
+    public HttpClient Client { get; private set; } = null!;
+
+    public override WebApplicationFactory<ApiProgram> CreateFactory()
     {
-        Factory = new WebApplicationFactory<Program>()
+        return new WebApplicationFactory<ApiProgram>()
             .WithWebHostBuilder(builder => builder
                 .UseEnvironment("Test")
                 .ConfigureServices((context, services) => services
-                    .ConfigureMigrations(context.Configuration))
-            );
-
-        DbContext = Factory.Services.GetRequiredService<BalancesDbContext>();
+                    .ConfigureMigrations(context.Configuration)));
     }
 
-    public WebApplicationFactory<Program> Factory { get; }
-    public BalancesDbContext DbContext { get; }
-    public HttpClient Client { get; private set; } = null!;
-
-    public void Dispose()
+    public override async Task DisposeAsync()
     {
-        DbContext.Dispose();
-        Factory.Dispose();
-    }
+        await base.DisposeAsync();
 
-    public Task DisposeAsync()
-    {
         Client.Dispose();
-
-        return Task.CompletedTask;
     }
 
-    public async Task InitializeAsync()
+    public override async Task InitializeAsync()
     {
-        await new MigrationsRunner(Factory.Services).RunMigrationsAsync();
+        await base.InitializeAsync();
 
         Client = Factory.CreateClient();
     }

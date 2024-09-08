@@ -1,4 +1,4 @@
-namespace DailyBalances.Worker.Configuration.Options;
+namespace DailyBalances.OperationsConsumer.Configuration.Options;
 
 public sealed class MessageBrokerOptions
 {

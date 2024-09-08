@@ -4,7 +4,7 @@ using FluentValidation;
 using MassTransit;
 using MediatR;
 
-namespace DailyBalances.Worker.Consumer;
+namespace DailyBalances.OperationsConsumer.Consumer;
 
 public sealed class OperationRegisteredConsumer : IConsumer<OperationRegistered>
 {

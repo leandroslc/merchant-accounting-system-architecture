@@ -1,8 +1,8 @@
-using DailyBalances.Worker.Configuration.Options;
-using DailyBalances.Worker.Consumer;
+using DailyBalances.OperationsConsumer.Configuration.Options;
+using DailyBalances.OperationsConsumer.Consumer;
 using MassTransit;
 
-namespace DailyBalances.Worker.Configuration;
+namespace DailyBalances.OperationsConsumer.Configuration;
 
 public static class MessageBrokerConfigurationExtensions
 {
