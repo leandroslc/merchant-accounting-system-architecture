@@ -1,0 +1,78 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-accounting-operations:
+    name: 'Accounting Operations Service'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./services/accounting-operations
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.401'
+
+    - name: Start database
+      run: docker-compose up -d accounting-operations-db
+      working-directory: ./
+
+    - name: Start message broker
+      run: docker-compose up -d message-broker
+      working-directory: ./
+
+    - name: Build
+      run: dotnet build
+
+    - name: Test
+      run: dotnet test
+
+    - name: Stop containers
+      if: always()
+      run: docker-compose down
+      working-directory: ./
+
+  build-daily-balances:
+    name: 'Daily Balances Service'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./services/daily-balances
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.401'
+
+    - name: Start database
+      run: docker-compose up -d daily-balances-db
+      working-directory: ./
+
+    - name: Start message broker
+      run: docker-compose up -d message-broker
+      working-directory: ./
+
+    - name: Build
+      run: dotnet build
+
+    - name: Test
+      run: dotnet test
+
+    - name: Stop containers
+      if: always()
+      run: docker-compose down
+      working-directory: ./
