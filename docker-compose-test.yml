@@ -8,10 +8,8 @@ services:
     ports:
       - "6565:6565"
     command: run /scripts/index.js
-    environment:
-      - K6_OUT=influxdb=http://influxdb:8086/k6
     volumes:
-      - ./configuration/loadtests:/scripts
+      - ./load-tests:/scripts
     depends_on:
       api-gateway:
         condition: service_healthy
