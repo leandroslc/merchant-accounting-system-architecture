@@ -35,3 +35,10 @@ routes:
     service: daily-balances-api-balance
     paths:
       - /balance
+
+plugins:
+- name: correlation-id
+  config:
+    header_name: Correlation-Id
+    generator: uuid#counter
+    echo_downstream: false
