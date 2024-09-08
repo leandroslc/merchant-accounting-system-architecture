@@ -1,0 +1,37 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: accounting-operations-debit
+    host: accounting-operations-api
+    port: 8080
+    protocol: http
+    path: /v1/operations/debit
+
+  - name: accounting-operations-credit
+    host: accounting-operations-api
+    port: 8080
+    protocol: http
+    path: /v1/operations/credit
+
+  - name: daily-balances-api-balance
+    host: daily-balances-api
+    port: 8080
+    protocol: http
+    path: /v1/balances
+
+routes:
+  - name: debit
+    service: accounting-operations-debit
+    paths:
+      - /debit
+
+  - name: credit
+    service: accounting-operations-credit
+    paths:
+      - /credit
+
+  - name: balance
+    service: daily-balances-api-balance
+    paths:
+      - /balance

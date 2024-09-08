@@ -115,3 +115,20 @@ services:
       - MessageBroker__Host=amqp://message-broker:5672
       - MessageBroker__Username=db7d825c5ba9451381c4aa5c91f7bf82
       - MessageBroker__Password=9219052054e74abf95b964c37361cc4c
+
+  api-gateway:
+    container_name: merchant-accounting-system-api-gateway
+    image: kong/kong-gateway:3.7.1.2
+    volumes:
+      - ./configuration/kong:/kong/declarative/
+    ports:
+      - 5406:8000
+    environment:
+      - KONG_DATABASE=off
+      - KONG_DECLARATIVE_CONFIG=/kong/declarative/kong.yml
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001
+      - KONG_ADMIN_GUI_URL=http://localhost:8002
