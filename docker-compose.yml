@@ -134,6 +134,9 @@ services:
     environment:
       - Authority__Url=http://api-gateway:8001/consumers/apigatewayuser/jwt
       - Authority__Secret=SZfI0j8zz7UtJSbIqfDhPaBEX4d8bWDo
+    depends_on:
+      api-gateway:
+        condition: service_healthy
     healthcheck:
       test: curl -fv http://127.0.0.1:8080/live
       interval: 15s
@@ -162,5 +165,8 @@ services:
         condition: service_healthy
       daily-balances-api:
         condition: service_healthy
-      simple-auth-api:
-        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
