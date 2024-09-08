@@ -12,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=62561b6debea489bae1802bcd0590bc0
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
 
@@ -28,7 +28,7 @@ services:
       - POSTGRES_PASSWORD=45d9bef04dcf4b60b719fbd2a3c129c7
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
 
@@ -84,6 +84,11 @@ services:
       - MessageBroker__Host=amqp://message-broker:5672
       - MessageBroker__Username=db7d825c5ba9451381c4aa5c91f7bf82
       - MessageBroker__Password=9219052054e74abf95b964c37361cc4c
+    healthcheck:
+      test: curl -fv http://127.0.0.1:8080/live
+      interval: 15s
+      timeout: 30s
+      retries: 3
 
   daily-balances-api:
     container_name: merchant-accounting-system-daily-balances-api
@@ -99,6 +104,11 @@ services:
         condition: service_healthy
     environment:
       - ConnectionStrings__Balances=Server=daily-balances-db;Port=5432;Database=daily-balances;User Id=e5f413a7aa384eb0b67bd73afa32464f;Password=45d9bef04dcf4b60b719fbd2a3c129c7;
+    healthcheck:
+      test: curl -fv http://127.0.0.1:8080/live
+      interval: 15s
+      timeout: 30s
+      retries: 3
 
   operations-consumer-worker:
     container_name: merchant-accounting-system-operations-consumer-worker
@@ -132,3 +142,8 @@ services:
       - KONG_ADMIN_ERROR_LOG=/dev/stderr
       - KONG_ADMIN_LISTEN=0.0.0.0:8001
       - KONG_ADMIN_GUI_URL=http://localhost:8002
+    depends_on:
+      accounting-operations-api:
+        condition: service_healthy
+      daily-balances-db:
+        condition: service_healthy

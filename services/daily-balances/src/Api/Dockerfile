@@ -12,6 +12,8 @@ RUN dotnet publish -c Release -o ../publish
 # Run
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
+RUN apt update && apt upgrade && apt install -y curl
+
 WORKDIR /app
 COPY --from=build /app/publish .
 
