@@ -99,6 +99,19 @@ services:
         condition: service_healthy
     environment:
       - ConnectionStrings__Balances=Server=daily-balances-db;Port=5432;Database=daily-balances;User Id=e5f413a7aa384eb0b67bd73afa32464f;Password=45d9bef04dcf4b60b719fbd2a3c129c7;
+
+  operations-consumer-worker:
+    container_name: merchant-accounting-system-operations-consumer-worker
+    build:
+      context: ./services/daily-balances/src
+      dockerfile: ./OperationsConsumer/Dockerfile
+    depends_on:
+      daily-balances-db:
+        condition: service_healthy
+      message-broker:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__Balances=Server=daily-balances-db;Port=5432;Database=daily-balances;User Id=e5f413a7aa384eb0b67bd73afa32464f;Password=45d9bef04dcf4b60b719fbd2a3c129c7;
       - MessageBroker__Host=amqp://message-broker:5672
       - MessageBroker__Username=db7d825c5ba9451381c4aa5c91f7bf82
       - MessageBroker__Password=9219052054e74abf95b964c37361cc4c
