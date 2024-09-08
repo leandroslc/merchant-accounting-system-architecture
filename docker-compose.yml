@@ -41,6 +41,11 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=db7d825c5ba9451381c4aa5c91f7bf82
       - RABBITMQ_DEFAULT_PASS=9219052054e74abf95b964c37361cc4c
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 15s
+      timeout: 30s
+      retries: 3
 
   accounting-operations-migrate:
     container_name: merchant-accounting-system-accounting-operations-migrate
@@ -57,7 +62,43 @@ services:
     build:
       context: ./services/daily-balances/src
       dockerfile: ./Cli/Dockerfile
-    command: migrate -c "Server=daily-balances-db;Port=5432;Database=accounting-operations;User Id=e5f413a7aa384eb0b67bd73afa32464f;Password=45d9bef04dcf4b60b719fbd2a3c129c7;"
+    command: migrate -c "Server=daily-balances-db;Port=5432;Database=daily-balances;User Id=e5f413a7aa384eb0b67bd73afa32464f;Password=45d9bef04dcf4b60b719fbd2a3c129c7;"
     depends_on:
       daily-balances-db:
         condition: service_healthy
+
+  accounting-operations-api:
+    container_name: merchant-accounting-system-accounting-operations-api
+    build:
+      context: ./services/accounting-operations/src
+      dockerfile: ./Api/Dockerfile
+    ports:
+      - 5404:8080
+    depends_on:
+      accounting-operations-db:
+        condition: service_healthy
+      message-broker:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__Operations=Server=accounting-operations-db;Port=5432;Database=accounting-operations;User Id=ab58f518b0f8485a8934ee11289b4f31;Password=62561b6debea489bae1802bcd0590bc0;
+      - MessageBroker__Host=amqp://message-broker:5672
+      - MessageBroker__Username=db7d825c5ba9451381c4aa5c91f7bf82
+      - MessageBroker__Password=9219052054e74abf95b964c37361cc4c
+
+  daily-balances-api:
+    container_name: merchant-accounting-system-daily-balances-api
+    build:
+      context: ./services/daily-balances/src
+      dockerfile: ./Api/Dockerfile
+    ports:
+      - 5405:8080
+    depends_on:
+      daily-balances-db:
+        condition: service_healthy
+      message-broker:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__Balances=Server=daily-balances-db;Port=5432;Database=daily-balances;User Id=e5f413a7aa384eb0b67bd73afa32464f;Password=45d9bef04dcf4b60b719fbd2a3c129c7;
+      - MessageBroker__Host=amqp://message-broker:5672
+      - MessageBroker__Username=db7d825c5ba9451381c4aa5c91f7bf82
+      - MessageBroker__Password=9219052054e74abf95b964c37361cc4c
