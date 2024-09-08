@@ -1,0 +1,19 @@
+include:
+  - ./docker-compose.yml
+
+services:
+  load-tests:
+    container_name: merchant-accounting-system-load-tests
+    image: grafana/k6:latest
+    ports:
+      - "6565:6565"
+    command: run /scripts/index.js
+    environment:
+      - K6_OUT=influxdb=http://influxdb:8086/k6
+    volumes:
+      - ./configuration/loadtests:/scripts
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+      simple-auth-api:
+        condition: service_healthy

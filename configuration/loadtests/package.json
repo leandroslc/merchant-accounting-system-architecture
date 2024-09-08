@@ -1,0 +1,12 @@
+{
+  "name": "loadtests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/k6": "^0.53.1"
+  }
+}
