@@ -1,0 +1,8 @@
+@host = http://localhost:5246
+
+### Request token
+
+# @prompt userid Custom id or empty for random
+
+GET {{host}}/v1/tokens?userid={{userid}}
+Accept: application/json

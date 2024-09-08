@@ -124,6 +124,22 @@ services:
       - MessageBroker__Username=db7d825c5ba9451381c4aa5c91f7bf82
       - MessageBroker__Password=9219052054e74abf95b964c37361cc4c
 
+  simple-auth-api:
+    container_name: merchant-accounting-system-simple-auth-api
+    build:
+      context: ./services/simple-auth/src
+      dockerfile: ./Api/Dockerfile
+    ports:
+      - 54062:8080
+    environment:
+      - Authority__Url=http://api-gateway:8001/consumers/apigatewayuser/jwt
+      - Authority__Secret=SZfI0j8zz7UtJSbIqfDhPaBEX4d8bWDo
+    healthcheck:
+      test: curl -fv http://127.0.0.1:8080/live
+      interval: 15s
+      timeout: 30s
+      retries: 3
+
   api-gateway:
     container_name: merchant-accounting-system-api-gateway
     image: kong/kong-gateway:3.7.1.2
@@ -131,6 +147,7 @@ services:
       - ./configuration/kong:/kong/declarative/
     ports:
       - 5406:8000
+      - 54061:8001
     environment:
       - KONG_DATABASE=off
       - KONG_DECLARATIVE_CONFIG=/kong/declarative/kong.yml
@@ -143,5 +160,7 @@ services:
     depends_on:
       accounting-operations-api:
         condition: service_healthy
-      daily-balances-db:
+      daily-balances-api:
+        condition: service_healthy
+      simple-auth-api:
         condition: service_healthy

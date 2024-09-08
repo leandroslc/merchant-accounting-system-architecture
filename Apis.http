@@ -1,18 +1,30 @@
 @host = http://localhost:5406
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.mvdjdBZKOtWyQl54xAd8C9kY0RUyq-z26qNTjFR1DKA
+
+
+### Request token
+
+# @prompt userid Custom id or empty for a random id
+
+GET http://localhost:54062/v1/tokens?userid={{userid}}
+
 
 ### Register debit
+
+# @prompt token Bearer token
 
 POST {{host}}/debit
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "registrationDate": "2024-09-05T12:47:23.000Z",
+  "registrationDate": "2024-09-05T12:27:13.000Z",
   "value": "100.99"
 }
 
+
 ### Register credit
+
+# @prompt token Bearer token
 
 POST {{host}}/credit
 Content-Type: application/json
@@ -23,8 +35,10 @@ Authorization: Bearer {{token}}
   "value": "99.99"
 }
 
+
 ### Get day's balance
 
+# @prompt token Bearer token
 # @prompt day 0000-00-00
 
 GET {{host}}/balance?day={{day}}
