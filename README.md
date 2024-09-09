@@ -15,6 +15,7 @@
   - [Decisões arquiteturais](#decisões-arquiteturais)
   - [Considerações sobre a arquitetura](#considerações-sobre-a-arquitetura)
 - [Como os sistemas funcionam](#como-os-sistemas-funcionam)
+  - [Quais são os dados armazenados](#quais-são-os-dados-armazenados)
 - [Arquitetura local](#arquitetura-local)
   - [Tecnologias](#tecnologias)
   - [Limitações](#limitações)
@@ -102,6 +103,32 @@ Fluxo de como os sistemas funcionam e interagem entre si de forma mais detalhada
 > :bulb: Abra a imagem em nova guia para ampliar
 
 ![Fluxo do sistema](./docs/pt-br/system-function.drawio.svg)
+
+### Quais são os dados armazenados
+Cada serviço consome seu próprio banco de dados. Por ser um sistema simples, existem apenas duas entidades armazenadas:
+
+#### Lançamentos (Operations)
+Faz parte do serviço `accounting-operations`.
+
+Coluna          | Tipo         | Descrição
+:-------------- | :----------- | :----------------------------------------------
+`merchant_id`   | texto        | Um identificador único do comerciante.
+`registered_at` | data e tempo | Data e tempo do registro de lançamento, em UTC.
+`value`         | monetário    | Valor do lançamento.
+`type`          | inteiro      | Identificador do tipo de lançamento (e.g. débito ou crédito).
+
+As colunas `merchant_id` e `registered_at` formam um identificador único composto.
+
+#### Saldos (Balances)
+Faz parte do serviço `daily-balances`.
+
+Coluna          | Tipo      | Descrição
+:-------------- | :-------- | :----------------------------------------------
+`merchant_id`   | texto     | Um identificador único do comerciante.
+`day`           | data      | Data (dia).
+`total`         | monetário | Valor total do saldo.
+
+As colunas `merchant_id` e `day` formam um identificador único composto.
 
 ## Arquitetura local
 A arquitetura local (para fins de teste) é muito semelhante com a [arquitetura proposta](#arquitetura-proposta), mas com algumas pequenas limitações.
