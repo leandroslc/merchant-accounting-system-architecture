@@ -165,14 +165,14 @@ docker compose up -d
 Lembrando que também é possível fazer requisições diretamente pelo _Visual Studio Code_ se estiver usando a extensão [REST Client](#extensões-úteis-para-o-vs-code), acessando o arquivo [Apis.http](./Apis.http).
 
 ## Testes de carga
-Existem testes de carga para validarem alguns cenários. Atualmente o seguinte cenário é suportado:
+Os testes de carga validam alguns requisitos não-funcionais do sistema. As requisições são feitas a partir do API Gateway (fluxo completo). Atualmente o seguinte cenário é suportado:
 
 - 50 requisições simultâneas por segunda com taxa de falha menor que 5% para requisições de consulta de saldo.
 
 > :construction: Os testes ainda não chegam perto de um cenário real. Faltam outros cenários de testes mais bem elaborados.
 
 ### Executando testes de carga
-Os testes de carga testam os requisitos não-funcionais do sistema. As requisições são feitas a partir do API Gateway (fluxo completo). Para executar os testes de carga, utilize o comando abaixo:
+Para executar os testes de carga, utilize o comando abaixo:
 
 ```sh
 docker compose -f docker-compose-test.yml up
