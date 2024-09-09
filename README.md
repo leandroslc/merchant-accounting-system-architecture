@@ -33,8 +33,7 @@
   - [Registro de crédito](#registro-de-crédito)
   - [Consulta de saldo](#consulta-de-saldo)
   - [Obter token de acesso](#obter-token-de-acesso)
-- 11. Aprimoramentos futuros
-  - 11.1. Exemplo de uma arquitetura em nuvem (Azure)
+- [Aprimoramentos futuros](#aprimoramentos-futuros)
 
 ## Sobre o sistema
 Registra operações de lançamentos (débitos e créditos) de comerciantes e gera um saldo diário consolidado com o balanço total de todas as operações realizadas em cada dia.
@@ -301,3 +300,13 @@ Obtém um token de acesso para testes.
       string
       ```
   - **500**: Algum erro inesperado. Por ser uma API simples para fins de teste, alguns erros esperados também são retornados como 500.
+
+## Aprimoramentos futuros
+Algumas considerações sobre o que poderia ser melhorado:
+
+- Poderia haver um exemplo funcional na nuvem, mas infelizmente não tenho uma conta que possa usar gratuitamente.
+- Os testes de carga precisam ser melhorados para executarem um cenário mais realista, como por exemplo, executar registros simultâneos enquanto várias requisições são realizadas simultaneamente para consulta em um banco de dados com milhares de registros.
+- Poderia haver uma aplicação frontend, mas infelizmente não tive tempo.
+- Seria interessante adicionar observabilidade nas aplicações.
+- Utilizar um API Gateway que suporte uma autenticação melhor.
+
