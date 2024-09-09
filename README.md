@@ -14,7 +14,7 @@
 - [Arquitetura proposta](#arquitetura-proposta)
   - [Decisões arquiteturais](#decisões-arquiteturais)
   - [Considerações sobre a arquitetura](#considerações-sobre-a-arquitetura)
-- 4. Como os sistemas funcionam
+- [Como os sistemas funcionam](#como-os-sistemas-funcionam)
 - [Arquitetura local](#arquitetura-local)
   - [Tecnologias](#tecnologias)
   - [Limitações](#limitações)
@@ -95,6 +95,13 @@ Algumas considerações importantes sobre a arquitetura:
 - O banco de dados PostgreSQL foi selecionado porque ele é otimizado tanto para escrita e leitura. Além disso, ele foi escolhido principalmente pela alta disponibilidade.
 - O banco de dados da API de saldo por ter inconsistência eventual, apesar de que por ser um consolidado diário, não cause impactos para comerciante.
 - Nesse primeiro momento não houve necessidade de usar uma ferramenta de cache. Se fosse necessário, seria interessante experimentar um cache "na borda" como um [cache HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching) para consulta de saldo (saldos de dias passados não serão alterados com frequência).
+
+## Como os sistemas funcionam
+Fluxo de como os sistemas funcionam e interagem entre si de forma mais detalhada:
+
+> :bulb: Abra a imagem em nova guia para ampliar
+
+![Fluxo do sistema](./docs/pt-br/system-function.drawio.svg)
 
 ## Arquitetura local
 A arquitetura local (para fins de teste) é muito semelhante com a [arquitetura proposta](#arquitetura-proposta), mas com algumas pequenas limitações.
