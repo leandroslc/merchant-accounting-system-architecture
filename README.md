@@ -53,11 +53,9 @@ Alguns fatores influenciaram nas decisões durante a modelagem do sistema:
 - Um "lançamento" foi considerado [como descrito na contabilidade](https://en.wikipedia.org/wiki/Debits_and_credits). Como é o próprio comerciante que está registrando a operação, foi considerado que ele está usando uma conta ativa. Dessa forma: débitos aumentam o valor do caixa e créditos diminuem o valor do caixa.
 
 ## Arquitetura proposta
-> :bulb: Clique na imagem para aumentar
+> :bulb: Abra a imagem em nova guia para ampliar
 
-<a href="./docs/pt-br/architecture.drawio.svg" target="_blank">
-  <img src="./docs/pt-br/architecture.drawio.svg" alt="Proposta de arquitetura" />
-</a>
+![Proposta de arquitetura](./docs/pt-br/architecture.drawio.svg)
 
 Olhando de uma visão macro, o sistema como um todo funciona da seguinte forma:
 - O comerciante teria acesso a uma aplicação frontend como um site ou app.
@@ -67,11 +65,9 @@ Olhando de uma visão macro, o sistema como um todo funciona da seguinte forma:
 - Por sua vez, o API Gateway repassa a resposta, até chegar ao comerciante.
 
 ### Decisões arquiteturais
-> :bulb: Clique na imagem para aumentar
+> :bulb: Abra a imagem em nova guia para ampliar
 
-<a href="./docs/pt-br/architecture-overview.drawio.svg" target="_blank">
-  <img src="./docs/pt-br/architecture-overview.drawio.svg" alt="Proposta de arquitetura" />
-</a>
+![Decisões arquiteturais](./docs/pt-br/architecture-overview.drawio.svg)
 
 - **Escalabilidade:**
   - Apesar de fazer parte de um sistema único, ele foi dividido em partes independetes para que possam ser facilmente escaláveis. Neste caso, as APIs serão escaladas pelo _throughput_ de requisições HTTP e o worker será escalado pelo _throughput_ de mensagem recebidas.
