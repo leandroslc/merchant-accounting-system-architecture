@@ -23,6 +23,7 @@
   - [Como usar as funcionalidades](#como-usar-as-funcionalidades)
 - [Testes de carga](#testes-de-carga)
   - [Executando testes de carga](#executando-testes-de-carga)
+- [Arquitetura interna dos serviços](#arquitetura-interna-dos-serviços)
 - [Desenvolvimento](#desenvolvimento)
   - [Requisitos para desenvolvimento](#requisitos-para-desenvolvimento)
   - [Extensões úteis para o VS Code](#extensões-úteis-para-o-vs-code)
@@ -52,7 +53,7 @@ A ideia é que o próprio comerciante registre operações de caixa e realize a 
 ### Considerações sobre o sistema
 Alguns fatores influenciaram nas decisões durante a modelagem do sistema:
 
-- Um "lançamento" foi considerado [como descrito na contabilidade](https://en.wikipedia.org/wiki/Debits_and_credits). Como é o próprio comerciante que está registrando a operação, foi considerado que ele está usando uma conta ativa. Dessa forma: débitos aumentam o valor do caixa e créditos diminuem o valor do caixa.
+- Um "lançamento" foi considerado [como descrito na contabilidade](https://en.wikipedia.org/wiki/Debits_and_credits). Como é o próprio comerciante que está registrando a operação, foi considerado que ele está usando uma conta ativa. Dessa forma: débitos aumentam o valor do caixa e créditos diminuem o valor do caixa. De qualquer forma o sistema foi projetado para tornar simples essa modificação, se necessário.
 
 ## Arquitetura proposta
 > :bulb: Abra a imagem em nova guia para ampliar
@@ -137,7 +138,7 @@ Existem testes de carga para validarem alguns cenários. Atualmente o seguinte c
 > :construction: Os testes ainda não chegam perto de um cenário real. Faltam outros cenários de testes mais bem elaborados.
 
 ### Executando testes de carga
-Para executar os testes de carga, utilize o comando abaixo:
+Os testes de carga testam os requisitos não-funcionais do sistema. As requisições são feitas a partir do API Gateway (fluxo completo). Para executar os testes de carga, utilize o comando abaixo:
 
 ```sh
 docker compose -f docker-compose-test.yml up
@@ -152,6 +153,29 @@ Caso tenha executado os testes no modo _detached_ (`-d`), ainda é possível obs
 ```sh
 docker compose -f docker-compose-test.yml logs load-tests
 ```
+
+## Arquitetura interna dos serviços
+Os serviços _(backend)_ possuem uma mistura de _arquitetura hexagonal_, _arquitetura limpa_ e utiliza a mesma estrutura do _CQRS_. Dessa forma as aplicações são estruturadas da seguinte forma:
+
+> :bulb: Abra a imagem em nova guia para ampliar
+
+![Internal services architecture](./docs/pt-br/internal-services-architecture.drawio.svg)
+
+Apesar de parecer complexo, o fluxo é simples e acaba se tornando intuitivo para adicionar novas funcionalidades ou alterar uma funcionalidade já existente. O fluxo consiste em:
+
+- A aplicação recebe um payload de entrada, que podem ser tanto uma requisição HTTP quanto uma mensagem.
+- O payload de entrada é recebido:
+  - No caso das requisições HTTP, é recebido por um controller (convertido automaticamente).
+  - No caso de mensagens, é recebido por um consumidor (convertido manualmente).
+- O payload passa por uma validação (no caso dos controllers a validação ocorre automaticamente).
+- O payload é convertido para um _command_ ou uma _query_ dependendo da natureza da solicitação.
+  - No caso do consumidores, o payload sempre será convertido para um _command_.
+- O _command_ ou _query_ são enviados para um _mediator_ que envia para um _command handler_ ou _query handler_ equivalente.
+- Os _command handlers_ e _query handlers_ executam o processamento utilizando serviços de domínio, entidades de domínio e repositórios para acesso e alteração de dados.
+  - O _command_ geralmente é convertido para uma entidade de domínio.
+- No final do processamento:
+  - O _command handler_ publica um evento (que pode ser de domínio ou de integração).
+  - O _query handler_ trata os dados e retorna um _output_ (que será retornado como resposta).
 
 ## Desenvolvimento
 Algumas orientações de como preparar o ambiente de desenvolvimento.
@@ -182,7 +206,7 @@ Cada serviço possui um _CLI_ para executar migrations de banco de dados de form
 - Para o banco "Accounting Operations", execute `docker compose up accounting-operations-migrate`.
 - Para o banco "Daily Balances", execute `docker compose up daily-balances-migrate`.
 
-> :bulb: Não é necessário executar as migrations para executar os testes de integração.
+> :bulb: Não é necessário executar as migrations via comando para executar os testes de integração. Os testes de integração executam as migrations automaticamente em um banco de dados separado.
 
 ### Iniciando o broker de mensageria
 Para iniciar o broker de mensageria, basta executar o comando `docker compose up -d message-broker`.
