@@ -29,9 +29,10 @@
   - [Estrutura dos serviços](#estrutura-dos-serviços)
   - [Fluxo de trabalho](#fluxo-de-trabalho)
 - [Documentação dos endpoints](#documentação-dos-endpoints)
-  - 10.1. Registro de débito
-  - 10.2. Registro de crédito
-  - 10.3. Registro de saldo
+  - [Registro de débito](#registro-de-débito)
+  - [Registro de crédito](#registro-de-crédito)
+  - [Consulta de saldo](#consulta-de-saldo)
+  - [Obter token de acesso](#obter-token-de-acesso)
 - 11. Aprimoramentos futuros
   - 11.1. Exemplo de uma arquitetura em nuvem (Azure)
 
@@ -210,3 +211,97 @@ Caso esteja desenvolvendo para este repositório é importante seguir as seguint
 - O merge do _Pull Request_ deve sempre ser `Rebase`.
 
 ## Documentação dos endpoints
+
+### Registro de débito
+Registra um débito. _Este endpoint não trata registros duplicados._
+
+- **Endpoint**
+  Metódo | Url
+  :----- | :--------------------------
+  POST   | http://localhost:5406/debit
+
+- **Parâmetros**
+  Nome            | Tipo   | Local     | Descrição
+  :-------------- | :----  | :-------- | :--------
+  Authorization   | string | Cabeçalho | --
+
+- **Corpo (JSON)**
+  Nome               | Tipo   | Descrição
+  :----------------- | :----  | :--------
+  registrationDate   | string | Data e tempo de registro no formato ISO 8601, em UTC.
+  value              | number | Valor
+
+- **Respostas**
+  - **204**: Sucesso
+  - **400**: Problemas de validação no formato [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807).
+  - **500**: Algum erro inesperado ou um registro exatamente igual já existe. **_By design_, não é feita a verificação se o registro já existe antes de salvar**.
+
+### Registro de crédito
+Registra um crédito. _Este endpoint não trata registros duplicados._
+
+- **Endpoint**
+  Metódo | Url
+  :----- | :---------------------------
+  POST   | http://localhost:5406/credit
+
+- **Parâmetros**
+  Nome            | Tipo   | Local     | Descrição
+  :-------------- | :----  | :-------- | :--------
+  Authorization   | string | Cabeçalho | --
+
+- **Corpo (JSON)**
+  Nome               | Tipo   | Descrição
+  :----------------- | :----  | :--------
+  registrationDate   | string | Data e tempo de registro no formato ISO 8601, em UTC.
+  value              | number | Valor
+
+- **Respostas**
+  - **204**: Sucesso
+  - **400**: Problemas de validação no formato [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807).
+  - **500**: Algum erro inesperado ou um registro exatamente igual já existe. **_By design_, não é feita a verificação se o registro já existe antes de salvar**.
+
+
+### Consulta de saldo
+Consulta o saldo de um dia. Caso o dia não tenha tido algum lançamento, o saldo retornado será zero.
+
+- **Endpoint**
+  Metódo | Url
+  :----- | :----------------------------
+  GET    | http://localhost:5406/balance
+
+- **Parâmetros**
+  Nome            | Tipo   | Local     | Descrição
+  :-------------- | :----  | :-------- | :--------
+  Authorization   | string | Cabeçalho | --
+  Day             | string | Query     | Dia para consulta no formato ISO 8601 (`YYYY-MM-DD`).
+
+- **Respostas**
+  - **200**: Sucesso, com o conteúdo:
+    - ```typescript
+      {
+        "total": number
+      }
+      ```
+  - **400**: Problemas de validação no formato [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807).
+  - **500**: Algum erro inesperado ou um registro exatamente igual já existe.
+
+### Obter token de acesso
+Obtém um token de acesso para testes.
+
+- **Endpoint**
+  Metódo | Url
+  :----- | :-------------------------------
+  GET    | http://localhost:54062/v1/tokens
+
+- **Parâmetros**
+  Nome            | Tipo   | Local     | Descrição
+  :-------------- | :----  | :-------- | :--------
+  Authorization   | string | Cabeçalho | --
+  UserId          | string | Query     | Um id personalizado para o usuário de teste. Caso não seja especificado, será usado um id aleatório.
+
+- **Respostas**
+  - **200**: Sucesso, com conteúdo:
+    - ```typescript
+      string
+      ```
+  - **500**: Algum erro inesperado. Por ser uma API simples para fins de teste, alguns erros esperados também são retornados como 500.
