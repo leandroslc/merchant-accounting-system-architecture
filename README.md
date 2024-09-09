@@ -1,7 +1,10 @@
 
 <div align="center">
   <h1>Sistema de lançamentos para comerciantes</h1>
-  <p>Um modelo e exemplo de sistema de controle de lançamentos de comerciantes.</p>
+  <p>Um modelo e exemplo de sistema de controle de lançamentos para comerciantes.</p>
+  <a href="https://github.com/leandroslc/merchant-accounting-system-architecture/actions/workflows/ci.yml">
+    <img src="https://github.com/leandroslc/merchant-accounting-system-architecture/actions/workflows/ci.yml/badge.svg" alt="Build" />
+  </a>
 </div>
 
 ## Tópicos
