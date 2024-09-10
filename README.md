@@ -23,12 +23,12 @@
 - [Executando as aplicações](#executando-as-aplicações)
   - [Como usar as funcionalidades](#como-usar-as-funcionalidades)
 - [Testes de carga](#testes-de-carga)
-  - [Executando testes de carga](#executando-testes-de-carga)
+  - [Executando os testes de carga](#executando-os-testes-de-carga)
 - [Arquitetura interna dos serviços](#arquitetura-interna-dos-serviços)
 - [Desenvolvimento](#desenvolvimento)
   - [Requisitos para desenvolvimento](#requisitos-para-desenvolvimento)
   - [Extensões úteis para o VS Code](#extensões-úteis-para-o-vs-code)
-  - [Iniciando banco de dados das aplicações](#iniciando-banco-de-dados-das-aplicações)
+  - [Iniciando o banco de dados das aplicações](#iniciando-o-banco-de-dados-das-aplicações)
   - [Executar migrations programaticamente](#executar-migrations-programaticamente)
   - [Iniciando o broker de mensageria](#iniciando-o-broker-de-mensageria)
   - [Estrutura dos serviços](#estrutura-dos-serviços)
@@ -74,7 +74,7 @@ Olhando de uma visão macro, o sistema como um todo funciona da seguinte forma:
 ![Decisões arquiteturais](./docs/pt-br/architecture-overview.drawio.svg)
 
 - **Escalabilidade:**
-  - Apesar de fazer parte de um sistema único, ele foi dividido em partes independetes para que possam ser facilmente escaláveis. Neste caso, as APIs serão escaladas pelo _throughput_ de requisições HTTP e o worker será escalado pelo _throughput_ de mensagem recebidas.
+  - Apesar de fazer parte de um sistema único, ele foi dividido em partes independetes para que possam ser facilmente escaláveis. Neste caso, as APIs serão escaladas pelo _throughput_ de requisições HTTP e o worker será escalado pelo _throughput_ de mensagens recebidas.
   - O banco de dados separado das duas aplicações também permite escalabilidade independente.
 - **Resiliência:**
   - Os sistemas são independentes. Se uma API falhar, a outra não falha, e vice versa.
@@ -83,10 +83,10 @@ Olhando de uma visão macro, o sistema como um todo funciona da seguinte forma:
   - A arquitetura foi projetada principalmente para manter uma alta disponibilidade.
   - A API de saldo suporta um alto _throughput_ pois recebe apenas uma requisição de consulta que é feita através de um banco de dados otimizado para leitura.
   - A API de lançamentos recebe requisições otimizadas para escrita, onde operações são apenas adicionadas.
-  - O processamento do saldo é feito de forma assíncrona e não interrompe nenhum fluxo. É usada uma abordagem de concorrência otimista, portanto existe apenas uma operação de _lock_ no saldo de apenas um dia por um período de poucos milissegundos.
+  - O processamento do saldo é feito de forma assíncrona e não interrompe nenhum fluxo. É usada uma abordagem de concorrência otimista, portanto existe apenas uma operação de _lock_ no saldo de apenas um dia (apenas uma linha da tabela do banco de dados) por um período de poucos milissegundos.
 - **Segurança:**
   - O sistema como um todo possui apenas uma porta de entrada, que possui auntenticação e pode ser facilmente extensível para suportar _rate limit_.
-  - Os sistemas da rede privada ficam inacessíveis externamente. Por conta disso, não há necessidade de revalidar os tokens de acesso já previamente validados e, além disso, não existe obrigatóriedade de usar HTTPS, que aumentaria latência.
+  - Os sistemas da rede privada ficam inacessíveis externamente. Por conta disso, não há necessidade de revalidar os tokens de acesso já previamente validados e, além disso, não existe obrigatóriedade de se usar HTTPS, que aumentaria latência.
 - **Monitoramento:**
   - O API Gateway gera e repassa um _[Correlation Identifier](https://microservices.io/patterns/observability/distributed-tracing.html)_ para os sistemas. Com isso seria possível instrumentar ferramentas de observalidade para realizar o tracing distribuído.
 
@@ -94,7 +94,7 @@ Olhando de uma visão macro, o sistema como um todo funciona da seguinte forma:
 Algumas considerações importantes sobre a arquitetura:
 - Apesar de os sistemas terem sido projetados para estarem separados preventivamente, esta arquitetura pode não ser a mais eficiente com relação a custo. Existem aplicações que suportam praticamente mais de 50 requisições por segundo usando apenas um banco de dados e realizando vários processos de consulta, escrita e processamento de mensagens ao mesmo tempo. Por isso é sempre interessante medir o quanto de processamento é suportado e os custos necessários.
 - O banco de dados PostgreSQL foi selecionado porque ele é otimizado tanto para escrita e leitura. Além disso, ele foi escolhido principalmente pela alta disponibilidade.
-- O banco de dados da API de saldo por ter inconsistência eventual, apesar de que por ser um consolidado diário, não cause impactos para comerciante.
+- O banco de dados da API de saldo pode ter inconsistência eventual por conta do processamento assíncrono, apesar de que, por ser um consolidado diário, não causaria impactos para comerciante.
 - Nesse primeiro momento não houve necessidade de usar uma ferramenta de cache. Se fosse necessário, seria interessante experimentar um cache "na borda" como um [cache HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching) para consulta de saldo (saldos de dias passados não serão alterados com frequência).
 
 ## Como os sistemas funcionam
@@ -140,8 +140,8 @@ A arquitetura local (para fins de teste) é muito semelhante com a [arquitetura 
 - Broker de mensageria: [RabbitMQ](https://www.rabbitmq.com/).
 
 ### Limitações
-- O API Gateway foi implementado com o Kong _Open Source_. Por conta disso, ele não suporta ferramentas do licença _Enterprise_, como _OpenId Connect_. Ou seja, ele não tem suporte para provedores como o Keycloak, por exemplo.
-- Para autenticação é usado próprio Kong, com uma combinação de um sistema simples e utilitário para geração de tokens de acesso válidos.
+- O API Gateway foi implementado com o Kong _Open Source_. Por conta disso, ele não suporta ferramentas da licença _Enterprise_, como _OpenId Connect_. Ou seja, ele não tem suporte para provedores como o Keycloak, por exemplo.
+- Para autenticação é usado o próprio Kong, com uma combinação de um sistema simples e utilitário para geração de tokens de acesso válidos.
 
 ## Requisitos mínimos
 Requisitos mínimos para executar as aplicações:
@@ -149,15 +149,15 @@ Requisitos mínimos para executar as aplicações:
 - [Docker e Docker Compose](https://www.docker.com/get-started/).
 
 ## Executando as aplicações
-Após garantir que você possui os [requisitos mínimos](#requisitos-mínimos), para iniciar as aplicações, apenas execute o comando abaixo:
+Após garantir que você possui os [requisitos mínimos](#requisitos-mínimos), apenas execute o comando abaixo para iniciar as aplicações:
 
 ```sh
 docker compose up -d
 ```
 
-> :bulb: As aplicações internamente são inicializadas na sequência apropriada para que inicializem corretamente.
+> :bulb: As aplicações são inicializadas na sequência apropriada automaticamente.
 
-> :warning: Observação: dependendo do sistema, é possível que as portas definidas no `docker-compose` já estejam em uso. Nesse caso, será necessário ajustá-las ou potencialmente parar as aplicações que utilizam estas portas.
+> :warning: Observação: dependendo do sistema, é possível que as portas definidas no `docker-compose` já estejam em uso. Nesse caso, será necessário ajustá-las ou, potencialmente, parar as aplicações que utilizam estas portas.
 
 ### Como usar as funcionalidades
 [Veja a documentação dos endpoints](#documentação-dos-endpoints) para saber como realizar as requisições e quais são os retornos possíveis.
@@ -167,11 +167,13 @@ Lembrando que também é possível fazer requisições diretamente pelo _Visual 
 ## Testes de carga
 Os testes de carga validam alguns requisitos não-funcionais do sistema. As requisições são feitas a partir do API Gateway (fluxo completo). Atualmente o seguinte cenário é suportado:
 
-- 50 requisições simultâneas por segunda com taxa de falha menor que 5% para requisições de consulta de saldo.
+- Consulta de saldo: 50 requisições simultâneas por segundo com taxa de falha menor que 5%.
 
-> :construction: Os testes ainda não chegam perto de um cenário real. Faltam outros cenários de testes mais bem elaborados.
+Para os testes de carga é utilizado o [Grafana K6](https://grafana.com/oss/k6/).
 
-### Executando testes de carga
+> :construction: Os testes de carga ainda não chegam perto de um cenário real. Faltam outros cenários de testes mais bem elaborados.
+
+### Executando os testes de carga
 Para executar os testes de carga, utilize o comando abaixo:
 
 ```sh
@@ -228,7 +230,7 @@ Extensões recomendadas se estiver usando o _Visual Studio Code_:
 - [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client): Permite executar requisições através de arquivos `.http`.
 - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp): No caso de estar desenvolvendo em C# no Visual Studio Code.
 
-### Iniciando banco de dados das aplicações
+### Iniciando o banco de dados das aplicações
 Os bancos de dados de cada aplicação foram pré configurados no `docker compose`:
 
 - Para o banco "Accounting Operations", execute `docker compose up -d accounting-operations-db`.
@@ -339,7 +341,7 @@ Consulta o saldo de um dia. Caso o dia não tenha tido algum lançamento, o sald
       }
       ```
   - **400**: Problemas de validação no formato [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807).
-  - **500**: Algum erro inesperado ou um registro exatamente igual já existe.
+  - **500**: Algum erro inesperado.
 
 ### Obter token de acesso
 Obtém um token de acesso para testes.
